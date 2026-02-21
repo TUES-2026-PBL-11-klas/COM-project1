@@ -1,0 +1,138 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict gUfqrSxLNfyL59q6h5wL184x38TqbBUUaz5FrQELyt5ghd6SUJFM3ZDe27TDydE
+
+-- Dumped from database version 17.8
+-- Dumped by pg_dump version 17.8
+
+-- Started on 2026-02-21 21:10:37
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 2 (class 3079 OID 16439)
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
+--
+-- TOC entry 4947 (class 0 OID 0)
+-- Dependencies: 2
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+
+
+--
+-- TOC entry 890 (class 1247 OID 16553)
+-- Name: subject_type; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.subject_type AS ENUM (
+    'math',
+    'physics',
+    'it'
+);
+
+
+ALTER TYPE public.subject_type OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 219 (class 1259 OID 16484)
+-- Name: options; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.options (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    question_id uuid,
+    option_text text NOT NULL,
+    is_correct boolean DEFAULT false
+);
+
+
+ALTER TABLE public.options OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 16476)
+-- Name: questions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.questions (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    subject character varying(30) NOT NULL,
+    condition text NOT NULL
+);
+
+
+ALTER TABLE public.questions OWNER TO postgres;
+
+--
+-- TOC entry 4793 (class 2606 OID 16492)
+-- Name: options options_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.options
+    ADD CONSTRAINT options_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4790 (class 2606 OID 16483)
+-- Name: questions questions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.questions
+    ADD CONSTRAINT questions_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4791 (class 1259 OID 16499)
+-- Name: idx_options_question_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_options_question_id ON public.options USING btree (question_id);
+
+
+--
+-- TOC entry 4788 (class 1259 OID 16498)
+-- Name: idx_questions_subject; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_questions_subject ON public.questions USING btree (subject);
+
+
+--
+-- TOC entry 4794 (class 2606 OID 16493)
+-- Name: options options_question_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.options
+    ADD CONSTRAINT options_question_id_fkey FOREIGN KEY (question_id) REFERENCES public.questions(id) ON DELETE CASCADE;
+
+
+-- Completed on 2026-02-21 21:10:37
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict gUfqrSxLNfyL59q6h5wL184x38TqbBUUaz5FrQELyt5ghd6SUJFM3ZDe27TDydE
+
