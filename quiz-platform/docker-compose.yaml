@@ -1,21 +1,25 @@
 services:
   user-service:
     build: ./user-service
+    image: martin590/com-project1:user-service
     env_file:
       - .env
 
   quiz-service:
     build: ./quiz-service
+    image: martin590/com-project1:quiz-service
     env_file:
       - .env
 
   result-service:
     build: ./result-service
+    image: martin590/com-project1:result-service
     env_file:
       - .env
 
   api-gateway:
     build: ./api-gateway
+    image: martin590/com-project1:api-gateway
     ports:
       - "8080:8080"
     depends_on:

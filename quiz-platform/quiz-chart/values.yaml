@@ -1,0 +1,26 @@
+global:
+  imagePullPolicy: IfNotPresent
+
+apiGateway:
+  name: api-gateway
+  image: martin590/com-project1:api-gateway
+  replicas: 1
+  port: 8000
+
+userService:
+  name: user-service
+  image: martin590/com-project1:user-service
+  replicas: 1
+  port: 5000
+
+quizService:
+  name: quiz-service
+  image: martin590/com-project1:quiz-service
+  replicas: 1
+  port: 5001
+
+resultService:
+  name: result-service
+  image: martin590/com-project1:result-service
+  replicas: 1
+  port: 5002
