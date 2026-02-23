@@ -1,5 +1,5 @@
 global:
-  imagePullPolicy: Always
+  imagePullPolicy: IfNotPresent
 
 apiGateway:
   name: api-gateway

@@ -3,36 +3,16 @@ kind: Ingress
 metadata:
   name: quiz-platform-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
-      - path: /api
+      - path: /api/(.*)
         pathType: Prefix
         backend:
           service:
             name: {{ .Values.apiGateway.name }}
             port:
               number: {{ .Values.apiGateway.port }}
-      - path: /user
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ .Values.userService.name }}
-            port:
-              number: {{ .Values.userService.port }}
-      - path: /quiz
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ .Values.quizService.name }}
-            port:
-              number: {{ .Values.quizService.port }}
-      - path: /result
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ .Values.resultService.name }}
-            port:
-              number: {{ .Values.resultService.port }}
