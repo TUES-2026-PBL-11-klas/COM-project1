@@ -1,0 +1,55 @@
+/* quizzes.css — styles for the quiz listing page */
+
+/* Search bar */
+input[type="search"] {
+    border-radius: 0.25rem;
+    flex: 1;
+}
+
+select {
+    width: auto;
+}
+
+/* Quiz list */
+.quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.quiz-list li {
+    list-style: none;
+}
+
+.quiz-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border: var(--pico-border-width) solid var(--pico-muted-border-color);
+    border-radius: var(--pico-border-radius);
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+.quiz-row:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+    border-color: var(--pico-primary);
+}
+
+.quiz-row .quiz-title {
+    flex: 1;
+    font-weight: 600;
+    margin: 0;
+}
+
+.quiz-row .quiz-meta {
+    font-size: 0.8rem;
+    color: var(--pico-muted-color);
+    white-space: nowrap;
+}
