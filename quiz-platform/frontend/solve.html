@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wdth,wght@6..144,25..150,1..1000&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="solve.css">
+    <title>The Human Body — Ministry of Human Testing</title>
+</head>
+
+<body style="padding: 0 calc(2 * var(--pico-block-spacing-vertical))">
+    <header>
+        <nav>
+            <ul>
+                <li>
+                    <h3>Ministry of Human Testing</h3>
+                </li>
+            </ul>
+            <ul>
+                <li><a href="quizzes.html" class="secondary">Quizzes</a></li>
+                <li><a href="login.html" role="button">Log in</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- data-quiz-id is read by quiz.js to fetch the right questions -->
+    <main data-quiz-id="1">
+        <hgroup style="margin-bottom: 1.25rem;">
+            <p
+                style="margin:0; font-size:0.8rem; color:var(--pico-muted-color); font-weight:600; letter-spacing:0.06em; text-transform:uppercase;">
+                <span class="badge"
+                    style="background:#dbeafe;color:#1d4ed8;display:inline-block;padding:0.1rem 0.55rem;border-radius:999px;font-size:0.72rem;font-weight:700;">Science</span>
+                &nbsp;The Human Body: Systems &amp; Functions <!-- to be fixed -->
+            </p>
+        </hgroup>
+
+        <!-- Progress + Timer -->
+        <div class="progress-wrap">
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+            </div>
+            <span class="progress-label" id="progress-label">0 / — answered</span>
+            <span class="timer-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span id="timer-display">00:00</span>
+            </span>
+        </div>
+
+        <!-- Question dot map -->
+        <div class="q-map" id="q-map"></div>
+
+        <!-- Quiz cards injected by quiz.js -->
+        <div class="quiz-card-viewport" id="quiz-viewport"></div>
+    </main>
+
+    <script src="solve.js"></script>
+</body>
+
+</html>
