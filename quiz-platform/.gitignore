@@ -28,3 +28,11 @@ replay_pid*
 .vscode/
 .idea/
 *.iml
+db_secret.yaml
+*secret.*
+*secret*
+.env.*
+deploy.sh
+*.bak
+*.sql
+.vscode/
