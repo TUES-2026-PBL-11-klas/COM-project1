@@ -1,0 +1,40 @@
+name: Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push api-gateway
+        run: |
+          docker build -t martin590/com-project1:api-gateway-${{ github.sha }} ./api-gateway
+          docker push martin590/com-project1:api-gateway-${{ github.sha }}
+
+      - name: Build and push quiz-service
+        run: |
+          docker build -t martin590/com-project1:quiz-service-${{ github.sha }} ./quiz-service
+          docker push martin590/com-project1:quiz-service-${{ github.sha }}
+
+      - name: Build and push user-service
+        run: |
+          docker build -t martin590/com-project1:user-service-${{ github.sha }} ./user-service
+          docker push martin590/com-project1:user-service-${{ github.sha }}
+
+      - name: Build and push result-service
+        run: |
+          docker build -t martin590/com-project1:result-service-${{ github.sha }} ./result-service
+          docker push martin590/com-project1:result-service-${{ github.sha }}
