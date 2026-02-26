@@ -1,10 +1,30 @@
-from flask import Flask, jsonify
+import os
+from flask import Flask
+from db.database import db
+from controllers.auth_controller import auth_bp
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    
+    app.config["JWT_SECRET"] = os.environ.get("JWT_SECRET", "change-this-to-a-secure-random-secret-key")
+    app.config["JWT_EXPIRY_HOURS"] = int(os.environ.get("JWT_EXPIRY_HOURS", 12))
+    
+    # Database config
+    db_url = os.environ.get("USER_DB_URL", "sqlite:///users.db")
+    app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-@app.route('/users')
-def users():
-    return jsonify({"message": "users service working"}), 200
+    db.init_app(app)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    with app.app_context():
+        # In production use Alembic / Flask-Migrate
+        db.create_all()
+
+    app.register_blueprint(auth_bp)
+
+    return app
+
+app = create_app()
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

@@ -23,12 +23,18 @@
 hs_err_pid*
 replay_pid*
 
+# Enviroment variable file
+.env
+
+# Pycache
+**/__pycache__/
 
 .env
 .vscode/
 .idea/
 *.iml
 db_secret.yaml
+cluster.yaml
 *secret.*
 *secret*
 .env.*
