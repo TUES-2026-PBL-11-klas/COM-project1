@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wdth,wght@6..144,25..150,1..1000&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="quizzes.css">
+    <title>Explore Quizzes — Ministry of Human Testing</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li>
+                    <h3>Ministry of Human Testing</h3>
+                </li>
+            </ul>
+            <ul>
+                <li><a href="quizzes.html" class="secondary">Quizzes</a></li>
+                <li><a href="login.html" role="button">Log in</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <hgroup>
+            <h1>Explore <mark>Quizzes</mark></h1>
+            <p>Discover tests crafted to challenge and grow your mind.</p>
+        </hgroup>
+
+        <form role="group">
+            <input name="search" type="search" placeholder="Search quizzes…" aria-label="Search quizzes">
+            <select name="subject" aria-label="Select subject">
+                <option value="" selected>All subjects</option>
+                <!--<option value="math">Math</option>-->
+            </select>
+            <input type="submit" value="Search">
+        </form>
+
+        <ul class="quiz-list">
+            <li><a href="#" class="quiz-row">
+                    <span class="badge badge-science">Science</span>
+                    <span class="quiz-title">The Human Body: Systems and Functions</span>
+                    <span class="quiz-meta">20 questions</span>
+                </a></li>
+        </ul>
+    </main>
+</body>
+
+</html>

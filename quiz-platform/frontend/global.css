@@ -1,0 +1,67 @@
+/* ════════════════════════════════════════════════════════════
+   global.css — shared styles for all Ministry of Human Testing pages
+   Load this AFTER pico.min.css and BEFORE any page-specific CSS.
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Layout ───────────────────────────────────────────────── */
+body {
+    padding: 0 calc(2 * var(--pico-block-spacing-vertical));
+}
+
+/* ── Typography ───────────────────────────────────────────── */
+h1,
+h2,
+h3 {
+    font-family: "Google Sans Flex", var(--pico-font-family-sans-serif);
+}
+
+/* Gradient text highlight used in headings */
+mark {
+    padding: 0;
+    background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899);
+    background-clip: text;
+    color: transparent;
+    font-family: "Google Sans Flex", var(--pico-font-family-sans-serif);
+}
+
+/* ── Navigation ───────────────────────────────────────────── */
+/* Brand / logo link in nav — no underline */
+nav h3 a {
+    text-decoration: none;
+}
+
+/* ── Subject badge pills ──────────────────────────────────── */
+/* Used on quizzes.html and quiz.html */
+.badge {
+    display: inline-block;
+    padding: 0.15rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.badge-science {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.badge-history {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.badge-math {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.badge-literature {
+    background: #fce7f3;
+    color: #9d174d;
+}
+
+.badge-geography {
+    background: #f3e8ff;
+    color: #7e22ce;
+}

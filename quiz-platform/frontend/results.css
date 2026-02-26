@@ -1,0 +1,139 @@
+.results-stats {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    flex: 1 1 8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 1.25rem 1rem;
+    border: 1px solid var(--pico-border-color);
+    border-radius: var(--pico-border-radius);
+    background: var(--pico-card-background-color);
+    text-align: center;
+}
+
+.stat-value {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: "Google Sans Flex", var(--pico-font-family-sans-serif);
+    line-height: 1;
+}
+
+.stat-total,
+.stat-pct {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--pico-muted-color);
+    align-self: flex-end;
+    padding-bottom: 0.1rem;
+}
+
+.stat-icon {
+    width: 1.6rem;
+    height: 1.6rem;
+    color: var(--pico-muted-color);
+}
+
+.stat-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--pico-muted-color);
+}
+
+.wrong-section {
+    margin-top: 2rem;
+}
+
+.wrong-section h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.badge-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.wrong-section details {
+    margin-bottom: 0.6rem;
+}
+
+.wrong-section details summary {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.q-num {
+    display: inline-block;
+    padding: 0.1rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: #fee2e2;
+    color: #b91c1c;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.answer-body {
+    padding: 1rem 0.25rem 0.25rem;
+}
+
+.answer-body .question-text {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.option-btn.opt-wrong.opt-chosen {
+    border-color: #ef4444;
+    background: #fee2e2;
+    color: #7f1d1d;
+}
+
+.option-btn.opt-wrong.opt-chosen .option-key {
+    background: #ef4444;
+    color: #fff;
+    font-size: 0.85rem;
+}
+
+.option-btn.opt-correct {
+    border-color: #22c55e;
+    background: #dcfce7;
+    color: #14532d;
+}
+
+.option-btn.opt-correct .option-key {
+    background: #22c55e;
+    color: #fff;
+    font-size: 0.85rem;
+}
+
+.results-actions {
+    display: flex;
+    gap: 1rem;
+    margin: 2.5rem 0;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
