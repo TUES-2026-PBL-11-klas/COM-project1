@@ -1,0 +1,21 @@
+/* auth.css — shared styles for login.html and register.html */
+
+/* Centred card layout */
+article {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 50%;
+    max-width: 80%;
+}
+
+article>header {
+    font-family: "Google Sans Flex", var(--pico-font-family-sans-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+input[type="submit"] {
+    margin-top: var(--pico-spacing);
+}

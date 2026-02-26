@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wdth,wght@6..144,25..150,1..1000&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="solve.css">
+    <link rel="stylesheet" href="results.css">
+    <title>Results — Ministry of Human Testing</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li>
+                    <h3>Ministry of Human Testing</h3>
+                </li>
+            </ul>
+            <ul>
+                <li><a href="quizzes.html" class="secondary">Quizzes</a></li>
+                <li><a href="login.html" role="button">Log in</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- quiz -->
+        <hgroup>
+            <p>
+                <span class="badge badge-science">Science</span>
+            </p>
+            <h1>The Human Body: Systems &amp; Functions</h1>
+        </hgroup>
+
+        <!-- summary -->
+        <div class="results-stats">
+            <div class="stat-card">
+                <span class="stat-value">14<span class="stat-total">/20</span></span>
+                <span class="stat-label">Correct answers</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">70<span class="stat-pct">%</span></span>
+                <span class="stat-label">Score</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">
+                    <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    08:43
+                </span>
+                <span class="stat-label">Time elapsed</span>
+            </div>
+        </div>
+
+        <!-- incorrect answers -->
+        <section class="wrong-section">
+            <h2>Incorrect answers <span class="badge-count">6</span></h2>
+
+            <!-- question -->
+            <details>
+                <summary role="button" class="outline">
+                    <span class="q-num">Q4</span>
+                    Which organ produces insulin?
+                </summary>
+                <div class="answer-body">
+                    <p class="question-text">Which organ produces insulin?</p>
+                    <div class="options-grid">
+                        <button class="option-btn opt-wrong opt-chosen" disabled>
+                            <span class="option-key">✗</span> Liver
+                        </button>
+                        <button class="option-btn" disabled>
+                            <span class="option-key">B</span> Kidney
+                        </button>
+                        <button class="option-btn opt-correct" disabled>
+                            <span class="option-key">✓</span> Pancreas
+                        </button>
+                        <button class="option-btn" disabled>
+                            <span class="option-key">D</span> Stomach
+                        </button>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <div class="results-actions">
+            <a href="quizzes.html" role="button" class="outline">Back to quizzes</a>
+            <a href="solve.html" role="button">Retry quiz</a>
+        </div>
+    </main>
+</body>
+
+</html>

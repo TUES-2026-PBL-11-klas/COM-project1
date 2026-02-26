@@ -1,0 +1,16 @@
+/* index.css — styles for the landing page */
+
+.hero {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    text-align: center;
+}
+
+.ctas {
+    display: flex;
+    justify-content: center;
+    gap: var(--pico-spacing, 1rem);
+}
