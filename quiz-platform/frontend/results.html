@@ -32,89 +32,70 @@
     </header>
 
     <main>
-        <!-- quiz -->
-        <hgroup>
-            <p>
-                <span class="badge badge-science">Science</span>
-            </p>
-            <h1>The Human Body: Systems &amp; Functions</h1>
-        </hgroup>
-
-        <!-- summary -->
-        <div class="results-stats">
-            <div class="stat-card">
-                <span class="stat-value">14<span class="stat-total">/20</span></span>
-                <span class="stat-label">Correct answers</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value">70<span class="stat-pct">%</span></span>
-                <span class="stat-label">Score</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value">
-                    <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12 6 12 12 16 14" />
-                    </svg>
-                    08:43
-                </span>
-                <span class="stat-label">Time elapsed</span>
-            </div>
+        <!-- dynamic content container -->
+        <div id="results-loader" style="text-align:center; margin: 3rem 0; color: var(--pico-muted-color);">
+            Loading results...
         </div>
+        <div id="results-content" style="display: none;">
+            <hgroup id="quiz-hgroup">
+                <p>
+                    <span class="badge badge-science" id="quiz-subject">Loading</span>
+                </p>
+                <h1 id="quiz-title">Loading...</h1>
+            </hgroup>
 
-        <!-- incorrect answers -->
-        <section class="wrong-section">
-            <h2>Incorrect answers <span class="badge-count">6</span></h2>
-
-            <!-- question -->
-            <details>
-                <summary role="button" class="outline">
-                    <span class="q-num">Q4</span>
-                    Which organ produces insulin?
-                </summary>
-                <div class="answer-body">
-                    <p class="question-text">Which organ produces insulin?</p>
-                    <div class="options-grid">
-                        <button class="option-btn opt-wrong opt-chosen" disabled>
-                            <span class="option-key">✗</span> Liver
-                        </button>
-                        <button class="option-btn" disabled>
-                            <span class="option-key">B</span> Kidney
-                        </button>
-                        <button class="option-btn opt-correct" disabled>
-                            <span class="option-key">✓</span> Pancreas
-                        </button>
-                        <button class="option-btn" disabled>
-                            <span class="option-key">D</span> Stomach
-                        </button>
-                    </div>
+            <!-- summary -->
+            <div class="results-stats">
+                <div class="stat-card">
+                    <span class="stat-value"><span id="score-val">0</span><span class="stat-total">/<span
+                                id="total-val">0</span></span></span>
+                    <span class="stat-label">Correct answers</span>
                 </div>
-            </details>
-        </section>
+                <div class="stat-card">
+                    <span class="stat-value"><span id="score-pct">0</span><span class="stat-pct">%</span></span>
+                    <span class="stat-label">Score</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">
+                        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                        <span id="time-val">00:00</span>
+                    </span>
+                    <span class="stat-label">Time elapsed</span>
+                </div>
+            </div>
 
-        <div class="results-actions">
-            <a href="quizzes.html" role="button" class="outline">Back to quizzes</a>
-            <a href="solve.html" role="button">Retry quiz</a>
+            <!-- incorrect answers -->
+            <section class="wrong-section">
+                <h2>Incorrect answers <span class="badge-count" id="wrong-count">0</span></h2>
+                <div id="incorrect-container">
+                    <!-- Dynamic details go here -->
+                </div>
+            </section>
+
+            <div class="results-actions">
+                <a href="quizzes.html" role="button" class="outline">Back to quizzes</a>
+                <a href="solve.html" id="retry-btn" role="button">Retry quiz</a>
+            </div>
         </div>
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
+            // Authentication check
             try {
                 const response = await fetch('/api/users/v1.0/me');
                 if (response.ok) {
                     const user = await response.json();
-
-                    // Update navigation for logged in user
                     const navUl = document.querySelector('nav ul:last-child');
                     navUl.innerHTML = `
                         <li><a href="quizzes.html" class="secondary">Quizzes</a></li>
                         <li><span class="secondary" style="margin-right: 1rem;">Hello, ${user.username}</span></li>
                         <li><a href="#" id="logout-btn" role="button" class="outline">Log out</a></li>
                     `;
-
-                    // Handle logout
                     document.getElementById('logout-btn').addEventListener('click', async (e) => {
                         e.preventDefault();
                         await fetch('/api/users/v1.0/logout', { method: 'POST' });
@@ -124,6 +105,160 @@
             } catch (err) {
                 console.error("Failed to check auth status", err);
             }
+
+            // Results fetching logic
+            const urlParams = new URLSearchParams(window.location.search);
+            const attemptId = urlParams.get('attempt');
+
+            const loaderEl = document.getElementById('results-loader');
+            const contentEl = document.getElementById('results-content');
+
+            if (!attemptId) {
+                loaderEl.innerHTML = '<span style="color: var(--pico-del-color);">No attempt ID provided.</span>';
+                return;
+            }
+
+            try {
+                // Fetch attempt details
+                const attemptRes = await fetch(`/api/results/v1.0/attempts/${attemptId}`);
+                if (!attemptRes.ok) throw new Error("Failed to load attempt details.");
+                const attempt = await attemptRes.json();
+
+                // Fetch quiz details for title and subject
+                const quizRes = await fetch(`/api/quiz/v1.0/quizzes/${attempt.quiz_id}`);
+                let quiz = null;
+                if (quizRes.ok) {
+                    quiz = await quizRes.json();
+                }
+
+                // Fetch questions to match incorrect answers with their text and options
+                const qRes = await fetch(`/api/quiz/v1.0/quizzes/${attempt.quiz_id}/questions`);
+                let questions = [];
+                if (qRes.ok) {
+                    questions = await qRes.json();
+                }
+
+                // Populate Summary
+                document.getElementById('retry-btn').href = `solve.html?quiz=${attempt.quiz_id}`;
+                if (quiz) {
+                    document.getElementById('quiz-title').textContent = quiz.title || 'Unknown Quiz';
+                    // We don't have subject name directly from quiz ID unless we fetch subjects, so leave it generic or fetch it.
+                    // A quick workaround is to fetch subjects and find it.
+                    try {
+                        const subRes = await fetch(`/api/quiz/v1.0/subjects`);
+                        if (subRes.ok) {
+                            const subjects = await subRes.json();
+                            const sub = subjects.find(s => s.id === quiz.subject_id);
+                            if (sub) {
+                                document.getElementById('quiz-subject').textContent = sub.name.charAt(0).toUpperCase() + sub.name.slice(1);
+                            }
+                        }
+                    } catch (e) { }
+                }
+
+                document.getElementById('score-val').textContent = attempt.score;
+                document.getElementById('total-val').textContent = attempt.total;
+
+                const pct = attempt.total > 0 ? Math.round((attempt.score / attempt.total) * 100) : 0;
+                document.getElementById('score-pct').textContent = pct;
+
+                // Format elapsed time (seconds -> MM:SS)
+                const elapsed = attempt.elapsed_seconds || 0;
+                const m = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const s = (elapsed % 60).toString().padStart(2, '0');
+                document.getElementById('time-val').textContent = `${m}:${s}`;
+
+                // Populate Incorrect Answers
+                const incorrectAnswers = attempt.answers.filter(a => !a.is_correct);
+                document.getElementById('wrong-count').textContent = incorrectAnswers.length;
+
+                const container = document.getElementById('incorrect-container');
+
+                if (incorrectAnswers.length === 0) {
+                    container.innerHTML = '<p style="color: var(--pico-muted-color);">Perfect score! No incorrect answers.</p>';
+                } else {
+                    let wrongHtml = '';
+
+                    incorrectAnswers.forEach((ans, idx) => {
+                        const qObj = questions.find(q => q.id === ans.question_id);
+                        if (!qObj) return; // Skip if question data not found
+
+                        // Find the index of the question in the original array to show Q-number
+                        const qNumIndex = questions.findIndex(q => q.id === ans.question_id) + 1;
+
+                        let optionsHtml = '';
+                        (qObj.options || []).forEach((opt, oIdx) => {
+                            const letter = String.fromCharCode(65 + oIdx);
+                            let classes = "option-btn";
+                            let key = letter;
+
+                            if (opt.id === ans.selected_option_id) {
+                                classes += " opt-wrong opt-chosen";
+                                key = "✗";
+                            }
+                            if (opt.id === ans.correct_option_id) {
+                                classes += " opt-correct";
+                                key = "✓";
+                            }
+
+                            optionsHtml += `
+                                <button class="${classes}" disabled>
+                                    <span class="option-key">${key}</span> ${opt.text}
+                                </button>
+                            `;
+                        });
+
+                        wrongHtml += `
+                            <details>
+                                <summary role="button" class="outline">
+                                    <span class="q-num">Q${qNumIndex}</span>
+                                    ${qObj.q}
+                                </summary>
+                                <div class="answer-body">
+                                    <p class="question-text">${qObj.q}</p>
+                                    <div class="options-grid">
+                                        ${optionsHtml}
+                                    </div>
+                                </div>
+                            </details>
+                        `;
+                    });
+
+                    container.innerHTML = wrongHtml;
+                }
+
+                // Show content
+                loaderEl.style.display = 'none';
+                contentEl.style.display = 'block';
+
+            } catch (err) {
+                console.error("Results error:", err);
+                loaderEl.innerHTML = '<span style="color: var(--pico-del-color);">Error loading results. Please try again.</span>';
+            }
+        });
+        try {
+            const response = await fetch('/api/users/v1.0/me');
+            if (response.ok) {
+                const user = await response.json();
+
+                // Update navigation for logged in user
+                const navUl = document.querySelector('nav ul:last-child');
+                navUl.innerHTML = `
+                        <li><a href="quizzes.html" class="secondary">Quizzes</a></li>
+                        <li><span class="secondary" style="margin-right: 1rem;">Hello, ${user.username}</span></li>
+                        <li><a href="#" id="logout-btn" role="button" class="outline">Log out</a></li>
+                    `;
+
+                // Handle logout
+                document.getElementById('logout-btn').addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    await fetch('/api/users/v1.0/logout', { method: 'POST' });
+                    window.location.reload();
+                });
+            }
+        } catch (err) {
+            console.error("Failed to check auth status", err);
+        }
         });
     </script>
 </body>

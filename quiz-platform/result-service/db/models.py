@@ -13,6 +13,7 @@ class Attempt(db.Model):
     quiz_id = db.Column(db.Text, nullable=False)
     score = db.Column(db.Integer, nullable=False, default=0)
     total = db.Column(db.Integer, nullable=False, default=0)
+    elapsed_seconds = db.Column(db.Integer, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     answers = db.relationship("Answer", back_populates="attempt", cascade="all, delete-orphan")
@@ -24,6 +25,7 @@ class Attempt(db.Model):
             "quiz_id": self.quiz_id,
             "score": self.score,
             "total": self.total,
+            "elapsed_seconds": self.elapsed_seconds,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "answers": [a.to_dict() for a in self.answers]
         }
@@ -35,6 +37,7 @@ class Answer(db.Model):
     attempt_id = db.Column(db.Text, db.ForeignKey("attempts.id", ondelete="CASCADE"), nullable=False)
     question_id = db.Column(db.Text, nullable=False)
     selected_option_id = db.Column(db.Text, nullable=True) # can be null if skipped
+    correct_option_id = db.Column(db.Text, nullable=True)
     is_correct = db.Column(db.Boolean, default=False, nullable=False)
 
     attempt = db.relationship("Attempt", back_populates="answers")
@@ -44,5 +47,6 @@ class Answer(db.Model):
             "id": self.id,
             "question_id": self.question_id,
             "selected_option_id": self.selected_option_id,
+            "correct_option_id": self.correct_option_id,
             "is_correct": self.is_correct
         }

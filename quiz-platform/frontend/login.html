@@ -59,7 +59,9 @@
                 });
 
                 if (response.ok) {
-                    window.location.href = 'index.html';
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const redirectUrl = urlParams.get('redirect') || 'index.html';
+                    window.location.href = redirectUrl;
                 } else {
                     const errorData = await response.json();
                     errorMessage.textContent = errorData.error || 'Login failed';

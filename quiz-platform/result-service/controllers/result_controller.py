@@ -42,6 +42,7 @@ def submit_attempt():
 
     quiz_id = data.get("quiz_id")
     answers = data.get("answers") # Expected format: [{"question_id": "...", "selected_option_id": "..."}]
+    elapsed_seconds = data.get("elapsed", 0)
 
     if not quiz_id:
         return jsonify({"error": "quiz_id is required"}), 400
@@ -50,7 +51,7 @@ def submit_attempt():
          return jsonify({"error": "answers must be a list of objects"}), 400
 
     username = request.current_username
-    result, status = ResultService.submit_attempt(username, quiz_id, answers)
+    result, status = ResultService.submit_attempt(username, quiz_id, elapsed_seconds, answers)
     
     return jsonify(result), status
 

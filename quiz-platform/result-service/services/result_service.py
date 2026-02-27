@@ -5,7 +5,7 @@ from repository.result_repository import ResultRepository
 class ResultService:
 
     @staticmethod
-    def submit_attempt(username: str, quiz_id: str, submitted_answers: list):
+    def submit_attempt(username: str, quiz_id: str, elapsed_seconds: int, submitted_answers: list):
         quiz_service_url = os.environ.get("QUIZ_SERVICE_URL", "http://quiz-service:5001")
         # 1. Fetch correct answers from quiz-service internally
         try:
@@ -48,6 +48,7 @@ class ResultService:
             processed_answers.append({
                 "question_id": q_id,
                 "selected_option_id": selected_opt_id,
+                "correct_option_id": correct_opt_id,
                 "is_correct": is_correct
             })
 
@@ -58,6 +59,7 @@ class ResultService:
                 quiz_id=quiz_id,
                 score=score,
                 total=total_questions,
+                elapsed_seconds=elapsed_seconds,
                 answers_data=processed_answers
             )
             return attempt.to_dict(), 201

@@ -1,75 +1,43 @@
-// get questions from the server
 async function fetchQuestions(quizId) {
-    return [
-        {
-            "q": "test",
-            "options": ["test", "test", "test", "test"]
-        },
-        {
-            "q": "test",
-            "options": ["test", "test", "test", "test"]
-        },
-        {
-            "q": "test",
-            "options": ["test", "test", "test", "test"]
-        },
-        {
-            "q": "test",
-            "options": ["test", "test", "test", "test"]
-        },
-        {
-            "q": "test",
-            "options": ["test", "test", "test", "test"]
-        },
-        {
-            "q": "test",
-            "options": ["test", "test", "test", "test"]
-        },
-        {
-            "q": "test",
-            "options": ["test", "test", "test", "test"]
-        },
-        {
-            "q": "test",
-            "options": ["test", "test", "test", "test"]
-        },
-        {
-            "q": "test",
-            "options": ["test", "test", "test", "test"]
-        },
-        {
-            "q": "test",
-            "options": ["test", "test", "test", "test"]
-        }
-    ]
-
-    const response = await fetch(`/api/quizzes/v1.0/quizzes/${quizId}/questions`);
+    const response = await fetch(`/api/quiz/v1.0/quizzes/${quizId}/questions`);
     if (!response.ok) throw new Error(`Server returned ${response.status}`);
     const data = await response.json();
     return data.map(q => ({
-        q: q.question,
+        id: q.id,
+        q: q.condition,
         options: q.options,
-    })); // some example layout (tbd)
+    }));
 }
 
 // send answers to server with some layout
 async function submitAnswers(quizId, answers, secondsElapsed) {
-    return;
+    const payloadAnswers = answers
+        .map((optId, index) => ({
+            question_id: window.QUESTIONS_CACHE[index].id,
+            selected_option_id: window.QUESTIONS_CACHE[index].options[optId]?.id || null
+        }));
 
     const response = await fetch(`/api/results/v1.0/attempts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quizId, elapsed: secondsElapsed, answers }), // tbd
+        body: JSON.stringify({ quiz_id: quizId, elapsed: secondsElapsed, answers: payloadAnswers }),
     });
+
+    if (response.status === 401) {
+        // Not logged in.
+        // Optional: save state to sessionStorage to recover after login.
+        sessionStorage.setItem("saved_quiz_attempt", JSON.stringify({ quizId, elapsed: secondsElapsed, answers: payloadAnswers }));
+        window.location.href = `login.html?redirect=solve.html?quiz=${quizId}`;
+        return;
+    }
+
     if (!response.ok) throw new Error(`Submit failed: ${response.status}`);
     const data = await response.json();
-    // Server should return { resultsUrl: "/results/42" } (or similar)
-    window.location.href = data.resultsUrl;
+
+    window.location.href = `results.html?attempt=${data.id}`;
 }
 
 function initQuiz(quizId, QUESTIONS) {
-    const KEYS = ["A", "B", "C", "D"];
-
     // ── State ────────────────────────────────────────────────
     let current = 0;
     let answers = new Array(QUESTIONS.length).fill(null);
@@ -119,8 +87,8 @@ function initQuiz(quizId, QUESTIONS) {
             <div class="options-grid">
                 ${qdata.options.map((opt, oi) => `
                     <button class="option-btn" id="opt-${index}-${oi}" data-oi="${oi}">
-                        <span class="option-key">${KEYS[oi]}</span>
-                        ${opt}
+                        <span class="option-key">${String.fromCharCode(65 + oi)}</span>
+                        ${opt.option_text}
                     </button>
                 `).join("")}
             </div>
@@ -247,8 +215,9 @@ function initQuiz(quizId, QUESTIONS) {
 // ENTRY POINT
 // ════════════════════════════════════════════════════════════
 
-// Quiz ID comes from <main data-quiz-id="42">
-const quizId = document.querySelector("main").dataset.quizId ?? "1";
+// Quiz ID comes from the URL query params OR fallback to <main data-quiz-id="42">
+const urlParams = new URLSearchParams(window.location.search);
+const quizId = urlParams.get("quiz") || (document.querySelector("main")?.dataset.quizId ?? "1");
 
 // Show loading state while fetching
 const loadingEl = document.createElement("p");
@@ -259,6 +228,7 @@ document.getElementById("quiz-viewport").replaceWith(loadingEl);
 (async () => {
     try {
         const questions = await fetchQuestions(quizId);
+        window.QUESTIONS_CACHE = questions; // Store globally for submitAnswers
 
         const vp = document.createElement("div");
         vp.className = "quiz-card-viewport";

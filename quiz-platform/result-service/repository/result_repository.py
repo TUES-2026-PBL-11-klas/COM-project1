@@ -5,18 +5,20 @@ from sqlalchemy.orm import joinedload
 class ResultRepository:
 
     @staticmethod
-    def create_attempt(username: str, quiz_id: str, score: int, total: int, answers_data: list) -> Attempt:
+    def create_attempt(username: str, quiz_id: str, score: int, total: int, elapsed_seconds: int, answers_data: list) -> Attempt:
         attempt = Attempt(
             username=username,
             quiz_id=quiz_id,
             score=score,
-            total=total
+            total=total,
+            elapsed_seconds=elapsed_seconds
         )
         
         for ans_data in answers_data:
             answer = Answer(
                 question_id=ans_data["question_id"],
                 selected_option_id=ans_data.get("selected_option_id"),
+                correct_option_id=ans_data.get("correct_option_id"),
                 is_correct=ans_data["is_correct"]
             )
             attempt.answers.append(answer)

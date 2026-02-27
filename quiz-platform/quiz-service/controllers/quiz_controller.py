@@ -32,7 +32,14 @@ def get_quizzes():
     if err:
         return err
     subject_id = request.args.get("subject")  # optional
-    result, status = QuizService.get_quizzes(limit, offset, subject_id=subject_id)
+    search_term = request.args.get("search")  # optional
+    result, status = QuizService.get_quizzes(limit, offset, subject_id=subject_id, search=search_term)
+    return jsonify(result), status
+
+
+@quiz_bp.route("/quizzes/<quiz_id>", methods=["GET"])
+def get_quiz(quiz_id):
+    result, status = QuizService.get_quiz(quiz_id)
     return jsonify(result), status
 
 

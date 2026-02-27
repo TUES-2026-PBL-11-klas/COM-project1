@@ -4,10 +4,12 @@ from db.quiz_db import db
 
 class QuizRepository:
     @staticmethod
-    def get_all(limit=20, offset=0, subject_id=None):
+    def get_all(limit=20, offset=0, subject_id=None, search=None):
         q = db.session.query(Quiz)
         if subject_id is not None:
             q = q.filter(Quiz.subject_id == subject_id)
+        if search:
+            q = q.filter(Quiz.title.ilike(f"%{search}%"))
         return q.order_by(Quiz.id).limit(limit).offset(offset).all()
 
     @staticmethod

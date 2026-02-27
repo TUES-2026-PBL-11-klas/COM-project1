@@ -36,14 +36,14 @@
             <p>Discover tests crafted to challenge and grow your mind.</p>
         </hgroup>
 
-        <form role="group">
+        <!--<form role="group">
             <input name="search" type="search" placeholder="Search quizzes…" aria-label="Search quizzes">
             <select name="subject" aria-label="Select subject">
                 <option value="" selected>All subjects</option>
-                <!--<option value="math">Math</option>-->
+                <option value="math">Math</option>
             </select>
             <input type="submit" value="Search">
-        </form>
+        </form>-->
 
         <ul class="quiz-list">
             <li><a href="#" class="quiz-row">
@@ -56,20 +56,17 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
+            // Authentication check
             try {
                 const response = await fetch('/api/users/v1.0/me');
                 if (response.ok) {
                     const user = await response.json();
-
-                    // Update navigation for logged in user
                     const navUl = document.querySelector('nav ul:last-child');
                     navUl.innerHTML = `
                         <li><a href="quizzes.html" class="secondary">Quizzes</a></li>
                         <li><span class="secondary" style="margin-right: 1rem;">Hello, ${user.username}</span></li>
                         <li><a href="#" id="logout-btn" role="button" class="outline">Log out</a></li>
                     `;
-
-                    // Handle logout
                     document.getElementById('logout-btn').addEventListener('click', async (e) => {
                         e.preventDefault();
                         await fetch('/api/users/v1.0/logout', { method: 'POST' });
@@ -79,6 +76,99 @@
             } catch (err) {
                 console.error("Failed to check auth status", err);
             }
+
+            // Logic for Quizzes page
+            const subjectSelect = document.querySelector('select[name="subject"]');
+            const quizListEl = document.querySelector('.quiz-list');
+            const searchForm = document.querySelector('form[role="group"]');
+            const searchInput = document.querySelector('input[name="search"]');
+
+            let allSubjects = [];
+            let allQuizzes = [];
+
+            // 1. Fetch Subjects
+            try {
+                const subRes = await fetch('/api/quiz/v1.0/subjects');
+                if (subRes.ok) {
+                    allSubjects = await subRes.json();
+
+                    // Render subjects into the select dropdown
+                    subjectSelect.innerHTML = '<option value="" selected>All subjects</option>';
+                    allSubjects.forEach(s => {
+                        const opt = document.createElement('option');
+                        opt.value = s.id;
+                        // Default the text to the subject's name, uppercase first letter
+                        opt.textContent = s.name.charAt(0).toUpperCase() + s.name.slice(1);
+                        subjectSelect.appendChild(opt);
+                    });
+                }
+            } catch (err) {
+                console.error("Failed to fetch subjects:", err);
+            }
+
+            // 2. Fetch and Render Quizzes
+            async function loadQuizzes(subjectId = "", searchTerm = "") {
+                try {
+                    quizListEl.innerHTML = '<p style="text-align:center; color: var(--pico-muted-color);">Loading quizzes...</p>';
+
+                    let url = '/api/quiz/v1.0/quizzes';
+                    const params = [];
+                    if (subjectId) params.push(`subject=${subjectId}`);
+                    if (searchTerm) params.push(`search=${encodeURIComponent(searchTerm)}`);
+
+                    const qRes = await fetch(url + (params.length ? '?' + params.join('&') : ''));
+                    if (qRes.ok) {
+                        allQuizzes = await qRes.json();
+                        renderQuizzes(allQuizzes);
+                    } else {
+                        quizListEl.innerHTML = '<p style="text-align:center; color: var(--pico-del-color);">Error loading quizzes.</p>';
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch quizzes:", err);
+                    quizListEl.innerHTML = '<p style="text-align:center; color: var(--pico-del-color);">Connection error.</p>';
+                }
+            }
+
+            function renderQuizzes(quizzesToRender) {
+                quizListEl.innerHTML = '';
+
+                if (quizzesToRender.length === 0) {
+                    quizListEl.innerHTML = '<p style="text-align:center; color: var(--pico-muted-color);">No quizzes found.</p>';
+                    return;
+                }
+
+                quizzesToRender.forEach(q => {
+                    // Match subject color if possible
+                    const subjectData = allSubjects.find(s => s.id === q.subject_id);
+                    const subjectName = subjectData ? subjectData.name : 'General';
+
+                    // Create quiz li
+                    const li = document.createElement('li');
+
+                    // Note: passing quiz id to solve.html
+                    li.innerHTML = `
+                        <a href="solve.html?quiz=${q.id}" class="quiz-row">
+                            <span class="badge badge-science">${subjectName.charAt(0).toUpperCase() + subjectName.slice(1)}</span>
+                            <span class="quiz-title">${q.title}</span>
+                            <span class="quiz-meta">Take Quiz →</span>
+                        </a>
+                    `;
+                    quizListEl.appendChild(li);
+                });
+            }
+
+            // Initialization load
+            loadQuizzes();
+
+            // 3. Search and Filter Form Handling
+            searchForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const searchTerm = searchInput.value.trim();
+                const selectedSubjectId = subjectSelect.value;
+
+                loadQuizzes(selectedSubjectId, searchTerm);
+            });
         });
     </script>
 </body>
