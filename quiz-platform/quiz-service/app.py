@@ -1,10 +1,40 @@
-from flask import Flask, jsonify
+import os
+from flask import Flask
+from db.quiz_db import db
+from controllers.quiz_controller import quiz_bp
 
-app = Flask(__name__)
 
-@app.route('/quizzes')
-def quizzes():
-    return jsonify({"message": "quiz service working"}), 200
+def create_app():
+    app = Flask(__name__)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+    # Database config — default to SQLite for local dev
+    db_url = os.environ.get("QUIZ_DB_URL", "sqlite:///quiz.db")
+    app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    db.init_app(app)
+
+    with app.app_context():
+        import time
+        import sqlalchemy
+        for attempt in range(10):
+            try:
+                db.create_all()
+                break
+            except (sqlalchemy.exc.OperationalError,
+                    sqlalchemy.exc.ProgrammingError,
+                    sqlalchemy.exc.IntegrityError) as e:
+                if attempt < 9:
+                    time.sleep(2)
+                else:
+                    raise
+
+    app.register_blueprint(quiz_bp)
+
+    return app
+
+
+app = create_app()
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5001)

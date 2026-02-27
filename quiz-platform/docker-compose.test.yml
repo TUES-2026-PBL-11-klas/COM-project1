@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: quizuser
+      POSTGRES_PASSWORD: quizpassword
+      POSTGRES_DB: quizdb
+    ports:
+      - "5432:5432"
+
+  user-service:
+    environment:
+      - USER_DB_URL=postgresql://quizuser:quizpassword@db:5432/quizdb
+    depends_on:
+      - db
+
+  quiz-service:
+    environment:
+      - QUIZ_DB_URL=postgresql://quizuser:quizpassword@db:5432/quizdb
+    depends_on:
+      - db
+    ports:
+      - "5001:5001"
+
+  result-service:
+    environment:
+      - DATABASE_URL=postgresql://quizuser:quizpassword@db:5432/quizdb
+    depends_on:
+      - db
+
+  api-gateway:
+    ports:
+      - "8080:8080"
+    depends_on:
+      - quiz-service
+      - user-service
+      - result-service
