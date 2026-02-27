@@ -1,0 +1,140 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0" version="29.6.0">
+  <diagram id="er-diagram" name="Quiz Platform ER Diagram">
+    <mxGraphModel dx="1389" dy="751" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="users" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" value="USERS" vertex="1">
+          <mxGeometry height="126" width="180" x="50" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="users_col1" parent="users" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="PK id : integer" vertex="1">
+          <mxGeometry height="25" width="180" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="users_col2" parent="users" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="UK username : string" vertex="1">
+          <mxGeometry height="25" width="180" y="51" as="geometry" />
+        </mxCell>
+        <mxCell id="users_col3" parent="users" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="UK email : string" vertex="1">
+          <mxGeometry height="25" width="180" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="users_col4" parent="users" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="password_hash : string" vertex="1">
+          <mxGeometry height="25" width="180" y="101" as="geometry" />
+        </mxCell>
+        <mxCell id="subjects" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" value="SUBJECTS" vertex="1">
+          <mxGeometry height="101" width="180" x="350" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="subjects_col1" parent="subjects" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="PK id : text (uuid)" vertex="1">
+          <mxGeometry height="25" width="180" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="subjects_col2" parent="subjects" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="UK name : text" vertex="1">
+          <mxGeometry height="25" width="180" y="51" as="geometry" />
+        </mxCell>
+        <mxCell id="subjects_col3" parent="subjects" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="subject_type : text" vertex="1">
+          <mxGeometry height="25" width="180" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="quizzes" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" value="QUIZZES" vertex="1">
+          <mxGeometry height="101" width="180" x="350" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="quizzes_col1" parent="quizzes" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="PK id : text (uuid)" vertex="1">
+          <mxGeometry height="25" width="180" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="quizzes_col2" parent="quizzes" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="title : text" vertex="1">
+          <mxGeometry height="25" width="180" y="51" as="geometry" />
+        </mxCell>
+        <mxCell id="quizzes_col3" parent="quizzes" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="FK subject_id : text" vertex="1">
+          <mxGeometry height="25" width="180" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="questions" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" value="QUESTIONS" vertex="1">
+          <mxGeometry height="101" width="180" x="350" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="questions_col1" parent="questions" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="PK id : text (uuid)" vertex="1">
+          <mxGeometry height="25" width="180" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="questions_col2" parent="questions" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="FK quiz_id : text" vertex="1">
+          <mxGeometry height="25" width="180" y="51" as="geometry" />
+        </mxCell>
+        <mxCell id="questions_col3" parent="questions" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="condition : text" vertex="1">
+          <mxGeometry height="25" width="180" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="options" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" value="OPTIONS" vertex="1">
+          <mxGeometry height="126" width="180" x="350" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="options_col1" parent="options" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="PK id : text (uuid)" vertex="1">
+          <mxGeometry height="25" width="180" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="options_col2" parent="options" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="FK question_id : text" vertex="1">
+          <mxGeometry height="25" width="180" y="51" as="geometry" />
+        </mxCell>
+        <mxCell id="options_col3" parent="options" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="option_text : text" vertex="1">
+          <mxGeometry height="25" width="180" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="options_col4" parent="options" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="is_correct : boolean" vertex="1">
+          <mxGeometry height="25" width="180" y="101" as="geometry" />
+        </mxCell>
+        <mxCell id="attempts" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" value="ATTEMPTS" vertex="1">
+          <mxGeometry height="176" width="180" x="650" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="attempts_col1" parent="attempts" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="PK id : text (uuid)" vertex="1">
+          <mxGeometry height="25" width="180" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="attempts_col2" parent="attempts" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="username : text" vertex="1">
+          <mxGeometry height="25" width="180" y="51" as="geometry" />
+        </mxCell>
+        <mxCell id="attempts_col3" parent="attempts" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="FK quiz_id : text" vertex="1">
+          <mxGeometry height="25" width="180" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="attempts_col4" parent="attempts" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="score : integer" vertex="1">
+          <mxGeometry height="25" width="180" y="101" as="geometry" />
+        </mxCell>
+        <mxCell id="attempts_col5" parent="attempts" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="total : integer" vertex="1">
+          <mxGeometry height="25" width="180" y="126" as="geometry" />
+        </mxCell>
+        <mxCell id="attempts_col6" parent="attempts" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="created_at : datetime" vertex="1">
+          <mxGeometry height="25" width="180" y="151" as="geometry" />
+        </mxCell>
+        <mxCell id="answers" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" value="ANSWERS" vertex="1">
+          <mxGeometry height="151" width="180" x="650" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="answers_col1" parent="answers" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="PK id : text (uuid)" vertex="1">
+          <mxGeometry height="25" width="180" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="answers_col2" parent="answers" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="FK attempt_id : text" vertex="1">
+          <mxGeometry height="25" width="180" y="51" as="geometry" />
+        </mxCell>
+        <mxCell id="answers_col3" parent="answers" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="question_id : text" vertex="1">
+          <mxGeometry height="25" width="180" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="answers_col4" parent="answers" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="selected_option_id : text" vertex="1">
+          <mxGeometry height="25" width="180" y="101" as="geometry" />
+        </mxCell>
+        <mxCell id="answers_col5" parent="answers" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" value="is_correct : boolean" vertex="1">
+          <mxGeometry height="25" width="180" y="126" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" edge="1" parent="1" source="subjects" style="endArrow=ERmany;html=1;rounded=0;startArrow=ERone;startFill=0;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="quizzes" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" edge="1" parent="1" source="quizzes" style="endArrow=ERmany;html=1;rounded=0;startArrow=ERone;startFill=0;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="questions" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" edge="1" parent="1" source="questions" style="endArrow=ERmany;html=1;rounded=0;startArrow=ERone;startFill=0;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="options" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" edge="1" parent="1" source="attempts" style="endArrow=ERmany;html=1;rounded=0;startArrow=ERone;startFill=0;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="answers" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" edge="1" parent="1" source="users" style="endArrow=ERmany;html=1;rounded=0;startArrow=ERone;startFill=0;endFill=0;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;elbow=vertical;edgeStyle=orthogonalEdgeStyle;" target="attempts_col2" value="logical link">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="280" y="113" />
+              <mxPoint x="280" y="20" />
+              <mxPoint x="620" y="20" />
+              <mxPoint x="620" y="314" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge6" edge="1" parent="1" source="quizzes" style="endArrow=ERmany;html=1;rounded=0;startArrow=ERone;startFill=0;endFill=0;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" target="attempts" value="logical link">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

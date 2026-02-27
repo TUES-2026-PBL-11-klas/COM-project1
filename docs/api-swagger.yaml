@@ -1,0 +1,510 @@
+openapi: 3.0.0
+info:
+  title: Quiz Platform API
+  description: >
+    API documentation for the Quiz Platform, covering User Service, Quiz Service, and Result Service.
+    All services are exposed via an API gateway running on port 8080.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local API Gateway
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: jwt
+      description: JWT token stored in a cookie (must be Set-Cookie by login endpoint)
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token passed in Authorization header `Bearer <token>`
+
+  schemas:
+    UserRegistrationRequest:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+          example: john_doe
+        email:
+          type: string
+          format: email
+          example: john@example.com
+        password:
+          type: string
+          format: password
+          example: mysecretpassword
+
+    UserLoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: john_doe
+        password:
+          type: string
+          format: password
+          example: mysecretpassword
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: john_doe
+        email:
+          type: string
+          example: john@example.com
+
+    UserLoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Login successful
+        user:
+          $ref: '#/components/schemas/UserResponse'
+        token:
+          type: string
+          description: JWT token (only returned in body if cookie is not accessed directly)
+
+    Subject:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Mathematics 101
+        subject_type:
+          type: string
+          example: math
+          enum: [math, physics, it]
+
+    Quiz:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          example: Algebra Basics
+        subject_id:
+          type: string
+          format: uuid
+
+    Option:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        question_id:
+          type: string
+          format: uuid
+        option_text:
+          type: string
+          example: 4
+
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        quiz_id:
+          type: string
+          format: uuid
+        condition:
+          type: string
+          example: What is 2 + 2?
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/Option'
+
+    AttemptSubmissionItem:
+      type: object
+      required:
+        - question_id
+      properties:
+        question_id:
+          type: string
+          format: uuid
+        selected_option_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    AttemptSubmissionRequest:
+      type: object
+      required:
+        - quiz_id
+        - answers
+      properties:
+        quiz_id:
+          type: string
+          format: uuid
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttemptSubmissionItem'
+
+    AttemptAnswer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        question_id:
+          type: string
+          format: uuid
+        selected_option_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_correct:
+          type: boolean
+
+    AttemptResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+          example: john_doe
+        quiz_id:
+          type: string
+          format: uuid
+        score:
+          type: integer
+          example: 8
+        total:
+          type: integer
+          example: 10
+        created_at:
+          type: string
+          format: date-time
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttemptAnswer'
+
+  responses:
+    UnauthorizedError:
+      description: Unauthorized or missing/invalid token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Missing authentication token
+    BadRequestError:
+      description: Bad request (invalid pagination, missing args, etc.)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Request body must be JSON"
+
+security:
+  - cookieAuth: []
+  - bearerAuth: []
+
+paths:
+  /api/users/v1.0/register:
+    post:
+      tags:
+        - Users
+      summary: Register a new user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistrationRequest'
+      responses:
+        '201':
+          description: User successfully registered
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '409':
+          description: Conflict (username or email already exists)
+
+  /api/users/v1.0/login:
+    post:
+      tags:
+        - Users
+      summary: Login user
+      description: Authenticates user and sets `jwt` cookie. Also returns jwt token in response body.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              description: >
+                Contains the JWT. Example: `jwt=abcde12345; HttpOnly; SameSite=Strict`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLoginResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          description: Invalid username or password
+
+  /api/users/v1.0/logout:
+    post:
+      tags:
+        - Users
+      summary: Logout user
+      description: Clears the `jwt` cookie. Requires authentication.
+      responses:
+        '200':
+          description: User logged out successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /api/users/v1.0/me:
+    get:
+      tags:
+        - Users
+      summary: Get current authenticated user details
+      responses:
+        '200':
+          description: Returns current user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /api/quiz/v1.0/subjects:
+    get:
+      tags:
+        - Quiz
+      summary: Retrieve all subjects
+      security: []
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+          description: Pagination limit (max 200)
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          description: Pagination offset
+      responses:
+        '200':
+          description: List of subjects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subject'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+
+  /api/quiz/v1.0/quizzes:
+    get:
+      tags:
+        - Quiz
+      summary: Retrieve all quizzes
+      security: []
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: subject
+          schema:
+            type: string
+          description: Filter by subject ID
+      responses:
+        '200':
+          description: List of quizzes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Quiz'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+
+  /api/quiz/v1.0/quizzes/{quiz_id}/questions:
+    get:
+      tags:
+        - Quiz
+      summary: Retrieve questions for a specific quiz
+      security: []
+      parameters:
+        - in: path
+          name: quiz_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of questions with their options (correctness not included)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Question'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '404':
+          description: Quiz not found
+
+  /api/quiz/v1.0/internal/quizzes/{quiz_id}/answer-key:
+    get:
+      tags:
+        - Quiz
+      summary: Internal endpoint to retrieve the answer key for a quiz
+      security: []
+      description: Returns all questions and options with `is_correct` flags included. This is mainly intended for inter-service communication (Result Service).
+      parameters:
+        - in: path
+          name: quiz_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Answer key
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Question' # But `is_correct` will be populated here
+        '404':
+          description: Quiz not found
+
+  /api/results/v1.0/attempts:
+    post:
+      tags:
+        - Results
+      summary: Submit a quiz attempt
+      description: Requires authentication. Automatically fetches the answer key from Quiz Service to grade the attempt.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttemptSubmissionRequest'
+      responses:
+        '201':
+          description: Attempt graded and saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttemptResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    get:
+      tags:
+        - Results
+      summary: Get all attempts for the current user
+      description: Requires authentication.
+      responses:
+        '200':
+          description: List of graded attempts for the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AttemptResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /api/results/v1.0/attempts/{attempt_id}:
+    get:
+      tags:
+        - Results
+      summary: Get details of a specific attempt
+      description: Requires authentication.
+      parameters:
+        - in: path
+          name: attempt_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Detailed response for a specific attempt
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttemptResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Attempt does not belong to user
+        '404':
+          description: Attempt not found
