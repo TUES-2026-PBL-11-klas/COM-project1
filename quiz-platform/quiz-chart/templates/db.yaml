@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-urls
+  namespace: quiz-platform
+type: Opaque
+stringData:
+  USER_DB_URL: "postgresql://user_service:{{ .Values.db.userServicePassword }}@quiz-postgres-rw:5432/user_db"
+  QUIZ_DB_URL: "postgresql://quiz_service:{{ .Values.db.quizServicePassword }}@quiz-postgres-rw:5432/quiz_db"
+  DATABASE_URL: "postgresql://result_service:{{ .Values.db.resultServicePassword }}@quiz-postgres-rw:5432/result_db"
+  JWT_SECRET: "{{ .Values.db.jwtSecret }}"

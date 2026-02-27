@@ -1,0 +1,24 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: quiz-postgres
+  namespace: quiz-platform
+spec:
+  instances: 2
+
+  bootstrap:
+    initdb:
+      database: postgres
+      owner: postgres
+      postInitSQL:
+        # Create one DB per service, making that service's role the owner.
+        # Owners automatically have all privileges including schema CREATE (PG15-safe).
+        - CREATE ROLE user_service WITH LOGIN PASSWORD '{{ .Values.db.userServicePassword }}';
+        - CREATE ROLE quiz_service WITH LOGIN PASSWORD '{{ .Values.db.quizServicePassword }}';
+        - CREATE ROLE result_service WITH LOGIN PASSWORD '{{ .Values.db.resultServicePassword }}';
+        - CREATE DATABASE user_db OWNER user_service;
+        - CREATE DATABASE quiz_db OWNER quiz_service;
+        - CREATE DATABASE result_db OWNER result_service;
+
+  storage:
+    size: 1Gi

@@ -33,8 +33,6 @@ replay_pid*
 .vscode/
 .idea/
 *.iml
-db_secret.yaml
-cluster.yaml
 *secret.*
 *secret*
 .env.*
