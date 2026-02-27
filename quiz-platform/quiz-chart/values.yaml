@@ -1,15 +1,12 @@
 global:
   imagePullPolicy: Never
 
-# ─── Database credentials (DO NOT set real values here) ─────────────────────
-# Supply real values via secrets.values.yaml (gitignored) or --set flags in CI.
+# fake values
 db:
   userServicePassword: "changeme"
   quizServicePassword: "changeme"
   resultServicePassword: "changeme"
   jwtSecret: "changeme"
-
-# ─── Services ────────────────────────────────────────────────────────────────
 
 apiGateway:
   name: api-gateway
