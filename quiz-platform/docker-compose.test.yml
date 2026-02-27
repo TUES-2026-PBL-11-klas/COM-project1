@@ -7,28 +7,45 @@ services:
       POSTGRES_DB: quizdb
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U quizuser -d quizdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   user-service:
+    build: ./user-service
     environment:
       - USER_DB_URL=postgresql://quizuser:quizpassword@db:5432/quizdb
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   quiz-service:
+    build: ./quiz-service
     environment:
       - QUIZ_DB_URL=postgresql://quizuser:quizpassword@db:5432/quizdb
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "5001:5001"
 
   result-service:
+    build: ./result-service
     environment:
       - DATABASE_URL=postgresql://quizuser:quizpassword@db:5432/quizdb
+      - QUIZ_SERVICE_URL=http://quiz-service:5001
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    ports:
+      - "5002:5002"
 
   api-gateway:
+    build:
+      context: .
+      dockerfile: ./api-gateway/Dockerfile
     ports:
       - "8080:8080"
     depends_on:

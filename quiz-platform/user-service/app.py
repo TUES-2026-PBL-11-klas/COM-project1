@@ -17,14 +17,7 @@ def create_app():
     db.init_app(app)
 
     with app.app_context():
-        # In production use Alembic / Flask-Migrate
-        import sqlalchemy
-        import sqlite3
-        try:
-            db.create_all()
-        except sqlalchemy.exc.OperationalError as e:
-            if "already exists" not in str(e):
-                raise
+        db.create_all()
 
     app.register_blueprint(auth_bp)
 

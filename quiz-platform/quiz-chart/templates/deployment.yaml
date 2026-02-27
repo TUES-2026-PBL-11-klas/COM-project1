@@ -21,6 +21,18 @@ spec:
           imagePullPolicy: {{ $.Values.global.imagePullPolicy }}
           ports:
             - containerPort: {{ $service.port }}
+          {{- if $service.envSecret }}
+          envFrom:
+            - secretRef:
+                name: {{ $service.envSecret }}
+          {{- end }}
+          {{- if $service.env }}
+          env:
+            {{- range $name, $value := $service.env }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- end }}
           {{- if $service.resources }}
           resources:
             {{- toYaml $service.resources | nindent 12 }}

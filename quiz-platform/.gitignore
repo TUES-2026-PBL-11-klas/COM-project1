@@ -1,0 +1,15 @@
+# Local secret overrides — never commit real credentials
+secrets.values.yaml
+*.secret.yaml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Docker
+.dockerignore
+
+# Editor
+.vscode/
+.idea/

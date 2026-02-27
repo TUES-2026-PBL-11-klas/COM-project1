@@ -15,20 +15,8 @@ def create_app():
     db.init_app(app)
 
     with app.app_context():
-        import time
-        import sqlalchemy
         from db import models
-        for attempt in range(10):
-            try:
-                db.create_all()
-                break
-            except (sqlalchemy.exc.OperationalError,
-                    sqlalchemy.exc.ProgrammingError,
-                    sqlalchemy.exc.IntegrityError) as e:
-                if attempt < 9:
-                    time.sleep(2)
-                else:
-                    raise
+        db.create_all()
 
     app.register_blueprint(quiz_bp)
 

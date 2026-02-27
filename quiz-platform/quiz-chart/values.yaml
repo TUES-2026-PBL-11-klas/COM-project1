@@ -1,5 +1,15 @@
 global:
-  imagePullPolicy: IfNotPresent
+  imagePullPolicy: Never
+
+# ─── Database credentials (DO NOT set real values here) ─────────────────────
+# Supply real values via secrets.values.yaml (gitignored) or --set flags in CI.
+db:
+  userServicePassword: "changeme"
+  quizServicePassword: "changeme"
+  resultServicePassword: "changeme"
+  jwtSecret: "changeme"
+
+# ─── Services ────────────────────────────────────────────────────────────────
 
 apiGateway:
   name: api-gateway
@@ -19,6 +29,7 @@ userService:
   image: martin590/com-project1:user-service
   replicas: 1
   port: 5000
+  envSecret: db-urls
   resources:
     requests:
       cpu: "100m"
@@ -32,9 +43,13 @@ quizService:
   image: martin590/com-project1:quiz-service
   replicas: 1
   port: 5001
+  envSecret: db-urls
 
 resultService:
   name: result-service
   image: martin590/com-project1:result-service
   replicas: 1
   port: 5002
+  envSecret: db-urls
+  env:
+    QUIZ_SERVICE_URL: "http://quiz-service:5001"
