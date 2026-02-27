@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, make_response
 import re
 from functools import wraps
 import jwt
@@ -13,11 +13,14 @@ def is_valid_email(email: str) -> bool:
 def jwt_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        auth_header = request.headers.get("Authorization", "")
-        if not auth_header.startswith("Bearer "):
-            return jsonify({"error": "Missing or malformed Authorization header"}), 401
-
-        token = auth_header.split(" ", 1)[1]
+        token = request.cookies.get("jwt")
+        if not token:
+            auth_header = request.headers.get("Authorization", "")
+            if auth_header.startswith("Bearer "):
+                token = auth_header.split(" ", 1)[1]
+        
+        if not token:
+            return jsonify({"error": "Missing authentication token"}), 401
         try:
             payload = jwt.decode(token, current_app.config["JWT_SECRET"], algorithms=["HS256"])
         except jwt.ExpiredSignatureError:
@@ -67,13 +70,22 @@ def login():
         return jsonify({"error": "Username and password are required"}), 400
 
     result, status = AuthService.login_user(username, password)
+    
+    if status == 200 and "token" in result:
+        token = result.pop("token")
+        response = make_response(jsonify(result))
+        response.set_cookie("jwt", token, httponly=True, samesite="Strict")
+        return response, status
+
     return jsonify(result), status
 
 @auth_bp.route("/logout", methods=["POST"])
 @jwt_required
 def logout():
     username = request.current_user.username
-    return jsonify({"message": f"User '{username}' logged out successfully — discard your token"}), 200
+    response = make_response(jsonify({"message": f"User '{username}' logged out successfully"}))
+    response.delete_cookie("jwt")
+    return response, 200
 
 @auth_bp.route("/me", methods=["GET"])
 @jwt_required

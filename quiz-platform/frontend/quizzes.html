@@ -53,6 +53,34 @@
                 </a></li>
         </ul>
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/users/v1.0/me');
+                if (response.ok) {
+                    const user = await response.json();
+
+                    // Update navigation for logged in user
+                    const navUl = document.querySelector('nav ul:last-child');
+                    navUl.innerHTML = `
+                        <li><a href="quizzes.html" class="secondary">Quizzes</a></li>
+                        <li><span class="secondary" style="margin-right: 1rem;">Hello, ${user.username}</span></li>
+                        <li><a href="#" id="logout-btn" role="button" class="outline">Log out</a></li>
+                    `;
+
+                    // Handle logout
+                    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await fetch('/api/users/v1.0/logout', { method: 'POST' });
+                        window.location.reload();
+                    });
+                }
+            } catch (err) {
+                console.error("Failed to check auth status", err);
+            }
+        });
+    </script>
 </body>
 
 </html>

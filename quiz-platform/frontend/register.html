@@ -39,8 +39,49 @@
                 <small>Already have an account? <a href="login.html">Login</a></small>
                 <input type="submit" value="Register" />
             </form>
+            <p id="error-message" style="color: var(--pico-del-color); font-size: 0.8em; margin-top: 1em;"></p>
         </article>
     </main>
+
+    <script>
+        const form = document.querySelector('form');
+        const errorMessage = document.getElementById('error-message');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMessage.textContent = '';
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            if (data.password !== data.confirm_password) {
+                errorMessage.textContent = 'Passwords do not match';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/users/v1.0/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: data.username,
+                        email: data.email,
+                        password: data.password
+                    })
+                });
+
+                if (response.ok) {
+                    // Try to log them in automatically or redirect to login
+                    window.location.href = 'login.html';
+                } else {
+                    const errorData = await response.json();
+                    errorMessage.textContent = errorData.error || 'Registration failed';
+                }
+            } catch (err) {
+                errorMessage.textContent = 'Network error occurred';
+            }
+        });
+    </script>
 </body>
 
 </html>
