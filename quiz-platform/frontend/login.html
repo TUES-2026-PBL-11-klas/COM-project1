@@ -36,8 +36,39 @@
                 <small>Don't have an account? <a href="register.html">Register</a></small>
                 <input type="submit" value="Login" />
             </form>
+            <p id="error-message" style="color: var(--pico-del-color); font-size: 0.8em; margin-top: 1em;"></p>
         </article>
     </main>
+
+    <script>
+        const form = document.querySelector('form');
+        const errorMessage = document.getElementById('error-message');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMessage.textContent = '';
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/api/users/v1.0/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    window.location.href = 'index.html';
+                } else {
+                    const errorData = await response.json();
+                    errorMessage.textContent = errorData.error || 'Login failed';
+                }
+            } catch (err) {
+                errorMessage.textContent = 'Network error occurred';
+            }
+        });
+    </script>
 </body>
 
 </html>
