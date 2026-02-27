@@ -21,7 +21,7 @@ jobs:
 
       - name: Build and push api-gateway
         run: |
-          docker build -t martin590/com-project1:api-gateway-${{ github.sha }} ./quiz-platform/api-gateway
+          docker build -t martin590/com-project1:api-gateway-${{ github.sha }} -f ./quiz-platform/api-gateway/Dockerfile ./quiz-platform
           docker push martin590/com-project1:api-gateway-${{ github.sha }}
 
       - name: Build and push quiz-service
